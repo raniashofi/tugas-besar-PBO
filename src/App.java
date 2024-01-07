@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class App {
@@ -21,7 +22,8 @@ public class App {
             // Menu utama
             int choice;
             do {
-                System.out.println("\n1. Add Transaction");
+                System.out.println("\n=== APLIKASI PENCATAT KEUANGAN ===");
+                System.out.println("1. Add Transaction");
                 System.out.println("2. View Total Transactions");
                 System.out.println("3. Update Transaction");
                 System.out.println("4. Delete Transaction");
@@ -43,9 +45,14 @@ public class App {
                         double amount = scanner.nextDouble();
 
                         try {
+
+                            // Get the current timestamp
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                            java.util.Date utilDate = new java.util.Date(); // Specify the full path
+                            String timestamp = dateFormat.format(utilDate);
                             // Menambahkan transaksi baru
                             keuangan.createTransaction(type, description, amount);
-                            System.out.println("Transaction added successfully");
+                            System.out.println("Transaction added successfully at " + timestamp);
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
@@ -82,7 +89,6 @@ public class App {
                         try {
                             // Memperbarui transaksi
                             keuangan.updateTransaction(updateType, transactionId, newDescription, newAmount);
-                            System.out.println("Transaction updated successfully");
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
@@ -96,9 +102,13 @@ public class App {
                         int deleteTransactionId = scanner.nextInt();
 
                         try {
+                            // Get the current timestamp
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                            java.util.Date utilDate = new java.util.Date(); // Specify the full path
+                            String timestamp = dateFormat.format(utilDate);
                             // Menghapus transaksi
                             keuangan.deleteTransaction(deleteType, deleteTransactionId);
-                            System.out.println("Transaction deleted successfully");
+                            System.out.println("Transaction deleted successfully at " +timestamp);
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }

@@ -40,6 +40,7 @@ class Keuangan implements TransactionCRUD {
             preparedStatement.setDouble(3, amount);
             preparedStatement.executeUpdate();
         }
+
         connection.close();
     }
 
@@ -113,15 +114,22 @@ class Keuangan implements TransactionCRUD {
             throw new IllegalArgumentException("Description cannot be null or empty");
         }
 
+        String tableName;
+        String dateColumnName;
+
         if (type.equalsIgnoreCase("income")) {
             if (transactionId >= 1 && transactionId <= 100) {
-                query = "UPDATE income SET description = ?, amount = ? WHERE id = ?";
+                query = "UPDATE income SET description = ?, amount = ?, date = NOW() WHERE id = ?";
+                tableName = "income";
+                dateColumnName = "date";
             } else {
                 throw new IllegalArgumentException("Invalid transaction id");
             }
         } else if (type.equalsIgnoreCase("expense")) {
             if (transactionId >= 101 && transactionId <= 200) {
-                query = "UPDATE expense SET description = ?, amount = ? WHERE id = ?";
+                query = "UPDATE expense SET description = ?, amount = ?, date = NOW() WHERE id = ?";
+                tableName = "expense";
+                dateColumnName = "date";
             } else {
                 throw new IllegalArgumentException("Invalid transaction id");
             }
@@ -134,6 +142,18 @@ class Keuangan implements TransactionCRUD {
             preparedStatement.setDouble(2, newAmount);
             preparedStatement.setInt(3, transactionId);
             preparedStatement.executeUpdate();
+
+            // Get the updated timestamp from the database
+            String updatedTimestampQuery = "SELECT " + dateColumnName + " FROM " + tableName + " WHERE id = ?";
+            try (PreparedStatement timestampStatement = connection.prepareStatement(updatedTimestampQuery)) {
+                timestampStatement.setInt(1, transactionId);
+                try (ResultSet resultSet = timestampStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        String updatedTimestamp = resultSet.getString(dateColumnName);
+                        System.out.println("Transaction updated successfully at " + updatedTimestamp);
+                    }
+                }
+            }
         }
         connection.close();
     }
