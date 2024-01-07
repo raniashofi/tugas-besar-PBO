@@ -126,7 +126,7 @@ class Keuangan implements TransactionCRUD {
                 throw new IllegalArgumentException("Invalid transaction id");
             }
         } else if (type.equalsIgnoreCase("expense")) {
-            if (transactionId >= 101 && transactionId <= 200) {
+            if (transactionId >= 1 && transactionId <= 100) {
                 query = "UPDATE expense SET description = ?, amount = ?, date = NOW() WHERE id = ?";
                 tableName = "expense";
                 dateColumnName = "date";
@@ -172,7 +172,7 @@ class Keuangan implements TransactionCRUD {
                 throw new IllegalArgumentException("Invalid transaction id");
             }
         } else if (type.equalsIgnoreCase("expense")) {
-            if (transactionId >= 101 && transactionId <= 200) {
+            if (transactionId >= 1 && transactionId <= 100) {
                 query = "DELETE FROM expense WHERE id = ?";
             } else {
                 throw new IllegalArgumentException("Invalid transaction id");
